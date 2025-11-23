@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+const mongoose = require('mongoose');
 
 const departmentSchema = new mongoose.Schema({
   name: {
@@ -18,33 +18,28 @@ const departmentSchema = new mongoose.Schema({
     {
       type: String,
       enum: [
-        "Roads & Transportation",
-        "Water Supply",
-        "Electricity",
-        "Sanitation",
-        "Street Lighting",
-        "Public Safety",
-        "Healthcare",
-        "Education",
-        "Others",
+        'Roads & Transportation',
+        'Water Supply',
+        'Electricity',
+        'Sanitation',
+        'Street Lighting',
+        'Public Safety',
+        'Healthcare',
+        'Education',
+        'Others',
       ],
     },
   ],
-  jurisdiction: {
-    type: String,
-    enum: ["city", "zone", "ward", "state"],
-    default: "city",
-  },
   contactEmail: {
     type: String,
-    match: [/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/, "Invalid email"],
+    match: [/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/, 'Invalid email'],
   },
   contactPhone: String,
   officers: [
     {
       user: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "User",
+        ref: 'User',
       },
       designation: String,
       addedAt: {
@@ -53,36 +48,9 @@ const departmentSchema = new mongoose.Schema({
       },
     },
   ],
-  head: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "User",
-  },
-  workloadCapacity: {
-    type: Number,
-    default: 50,
-  },
   currentWorkload: {
     type: Number,
     default: 0,
-  },
-  performanceMetrics: {
-    totalResolved: {
-      type: Number,
-      default: 0,
-    },
-    avgResolutionTime: Number,
-    satisfactionRating: {
-      type: Number,
-      min: 0,
-      max: 5,
-    },
-    slaComplianceRate: Number,
-  },
-  slaTargets: {
-    critical: Number,
-    high: Number,
-    medium: Number,
-    low: Number,
   },
   isActive: {
     type: Boolean,
@@ -97,6 +65,4 @@ const departmentSchema = new mongoose.Schema({
 departmentSchema.index({ code: 1 });
 departmentSchema.index({ categories: 1 });
 
-const Department = mongoose.model("Department", departmentSchema);
-
-export default Department;
+module.exports = mongoose.model('Department', departmentSchema);

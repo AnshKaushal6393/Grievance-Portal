@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+const mongoose = require('mongoose');
 
 const complaintSchema = new mongoose.Schema({
   complaintId: {
@@ -10,70 +10,42 @@ const complaintSchema = new mongoose.Schema({
   },
   citizen: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "User",
+    ref: 'User',
     required: true,
   },
   title: {
     type: String,
-    required: [true, "Title is required"],
+    required: [true, 'Title is required'],
     trim: true,
-    maxLength: [200, "Title cannot exceed 200 characters"],
+    maxlength: [200, 'Title cannot exceed 200 characters'],
   },
   description: {
     type: String,
-    required: [true, "Description is required"],
-    maxLength: [2000, "Description cannot exceed 2000 characters"],
+    required: [true, 'Description is required'],
+    maxlength: [2000, 'Description cannot exceed 2000 characters'],
   },
   category: {
     type: String,
     required: true,
     enum: [
-      "Roads & Transportation",
-      "Water Supply",
-      "Electricity",
-      "Sanitation",
-      "Street Lighting",
-      "Public Safety",
-      "Healthcare",
-      "Education",
-      "Others",
+      'Roads & Transportation',
+      'Water Supply',
+      'Electricity',
+      'Sanitation',
+      'Street Lighting',
+      'Public Safety',
+      'Healthcare',
+      'Education',
+      'Others',
     ],
   },
   subCategory: String,
-
-  aiAnalysis: {
-    detectedCategories: [
-      {
-        category: String,
-        confidence: Number,
-      },
-    ],
-    priorityScore: {
-      type: Number,
-      min: 0,
-      max: 10,
-      default: 5,
-    },
-    sentimentScore: {
-      type: Number,
-      min: -1,
-      max: 1,
-      default: 0,
-    },
-    urgencyLevel: {
-      type: String,
-      enum: ["low", "medium", "high", "critical"],
-      default: "medium",
-    },
-    keywords: [String],
-    predictedResolutionTime: Number,
-  },
-
+  
   location: {
     type: {
       type: String,
-      enum: ["Point"],
-      default: "Point",
+      enum: ['Point'],
+      default: 'Point',
     },
     coordinates: {
       type: [Number],
@@ -82,14 +54,14 @@ const complaintSchema = new mongoose.Schema({
     address: String,
     landmark: String,
   },
-
+  
   media: [
     {
       url: String,
       publicId: String,
       type: {
         type: String,
-        enum: ["image", "video", "document"],
+        enum: ['image', 'video', 'document'],
       },
       uploadedAt: {
         type: Date,
@@ -97,32 +69,25 @@ const complaintSchema = new mongoose.Schema({
       },
     },
   ],
-
+  
   status: {
     type: String,
-    enum: [
-      "pending",
-      "assigned",
-      "in-progress",
-      "resolved",
-      "rejected",
-      "closed",
-    ],
-    default: "pending",
+    enum: ['pending', 'assigned', 'in-progress', 'resolved', 'rejected', 'closed'],
+    default: 'pending',
   },
-
+  
   assignedTo: {
     department: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Department",
+      ref: 'Department',
     },
     officer: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
+      ref: 'User',
     },
     assignedAt: Date,
   },
-
+  
   timeline: [
     {
       timestamp: {
@@ -132,28 +97,13 @@ const complaintSchema = new mongoose.Schema({
       action: String,
       performedBy: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "User",
+        ref: 'User',
       },
       notes: String,
       status: String,
     },
   ],
-
-  relatedComplaints: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Complaint",
-    },
-  ],
-  isDuplicate: {
-    type: Boolean,
-    default: false,
-  },
-  masterComplaint: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Complaint",
-  },
-
+  
   upvotes: {
     type: Number,
     default: 0,
@@ -161,34 +111,25 @@ const complaintSchema = new mongoose.Schema({
   upvotedBy: [
     {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
+      ref: 'User',
     },
   ],
-
-  resolutionDetails: {
-    resolvedAt: Date,
-    resolvedBy: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
-    },
-    resolutionNotes: String,
-    resolutionImages: [String],
-    citizenRating: {
+  
+  aiAnalysis: {
+    priorityScore: {
       type: Number,
-      min: 1,
-      max: 5,
+      min: 0,
+      max: 10,
+      default: 5,
     },
-    citizenFeedback: String,
-  },
-
-  sla: {
-    targetResolutionTime: Number, // in hours
-    breached: {
-      type: Boolean,
-      default: false,
+    sentimentScore: Number,
+    urgencyLevel: {
+      type: String,
+      enum: ['low', 'medium', 'high', 'critical'],
+      default: 'medium',
     },
   },
-
+  
   createdAt: {
     type: Date,
     default: Date.now,
@@ -199,18 +140,18 @@ const complaintSchema = new mongoose.Schema({
   },
 });
 
-complaintSchema.index({ location: "2dsphere" });
+// Indexes
+complaintSchema.index({ location: '2dsphere' });
 complaintSchema.index({ status: 1, createdAt: -1 });
-complaintSchema.index({ "assignedTo.department": 1, status: 1 });
+complaintSchema.index({ 'assignedTo.department': 1, status: 1 });
 complaintSchema.index({ citizen: 1, createdAt: -1 });
 complaintSchema.index({ complaintId: 1 });
 complaintSchema.index({ category: 1 });
 
-complaintSchema.pre("save", function (next) {
+// Update timestamp on save
+complaintSchema.pre('save', function (next) {
   this.updatedAt = Date.now();
   next();
 });
 
-const Complaint = mongoose.model("Complaint", complaintSchema);
-
-export default Complaint;
+module.exports = mongoose.model('Complaint', complaintSchema);

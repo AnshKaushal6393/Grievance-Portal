@@ -4,7 +4,7 @@ const Card = ({ children, className = '', hover = false, ...props }) => {
   return (
     <div
       className={`
-        bg-white rounded-lg shadow-md p-6
+        bg-white rounded-lg shadow-md border border-gray-200 p-6
         ${hover ? 'hover:shadow-lg transition-shadow duration-200 cursor-pointer' : ''}
         ${className}
       `}

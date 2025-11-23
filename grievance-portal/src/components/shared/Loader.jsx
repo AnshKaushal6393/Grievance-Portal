@@ -10,7 +10,7 @@ const Loader = ({ size = 'md', fullScreen = false }) => {
   const loader = (
     <div className="flex items-center justify-center">
       <div
-        className={`${sizes[size]} border-4 border-primary border-t-transparent rounded-full animate-spin`}
+        className={`${sizes[size]} border-4 border-[#2563eb] border-t-transparent rounded-full animate-spin`}
       ></div>
     </div>
   );

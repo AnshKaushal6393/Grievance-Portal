@@ -37,10 +37,10 @@ const userSchema = new mongoose.Schema({
     enum: ["citizen", "department", "admin"],
     default: "citizen",
   },
-  aadharHash: {
-    type: String,
-    select: false,
-  },
+  // aadharHash: {
+  //   type: String,
+  //   select: false,
+  // },
   address: {
     street: { type: String, trim: true },
     city: { type: String, trim: true },

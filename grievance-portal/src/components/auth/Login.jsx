@@ -1,183 +1,208 @@
-import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
-import { login, clearError } from '../../redux/slices/authSlice';
-import { Mail, Lock, Eye, EyeOff, AlertCircle } from 'lucide-react';
-import Button from '../shared/Button';
-import Input from '../shared/Input';
-import { toast } from 'react-toastify';
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { Link, useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
+import { toast } from "react-toastify";
+import { clearError, login } from "../../redux/slices/authSlice";
+import { AlertCircle, Eye, EyeOff } from "lucide-react";
 
-const Login = () => {
+function Login() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { loading, error, isAuthenticated } = useSelector((state) => state.auth);
+  const { t } = useTranslation();
+  const { loading, error, isAuthenticated } = useSelector(
+    (state) => state.auth
+  );
 
   const [formData, setFormData] = useState({
-    emailOrPhone: '',
-    password: '',
+    emailOrPhone: "",
+    password: "",
   });
   const [showPassword, setShowPassword] = useState(false);
 
   useEffect(() => {
-    if (!isAuthenticated) {
-      navigate('/dashboard');
-    }
+    if (isAuthenticated) navigate("/dashboard");
     if (error) {
       toast.error(error);
       dispatch(clearError());
     }
   }, [isAuthenticated, error, navigate, dispatch]);
 
-  const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
-  };
+  const handleChange = (e) =>
+    setFormData({ ...formData, [e.target.name]: e.target.value });
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-    
     if (!formData.emailOrPhone || !formData.password) {
-      toast.error('Please fill all fields');
+      toast.error("Please fill all required fields");
       return;
     }
-
     dispatch(login(formData));
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-blue-50 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-md w-full">
-        {/* Logo & Title */}
-        <div className="text-center mb-8">
-          <div className="mx-auto h-16 w-16 bg-primary rounded-full flex items-center justify-center mb-4">
-            <svg
-              className="h-10 w-10 text-white"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-              />
-            </svg>
-          </div>
-          <h2 className="text-3xl font-bold text-gray-900">Welcome Back</h2>
-          <p className="mt-2 text-sm text-gray-600">
-            Sign in to your Grievance Portal account
-          </p>
-        </div>
-
-        {/* Login Card */}
-        <div className="bg-white rounded-2xl shadow-xl p-8">
-          <form onSubmit={handleSubmit} className="space-y-6">
-            {/* Email/Phone Input */}
-            <Input
-              label="Email or Phone Number"
-              type="text"
-              name="emailOrPhone"
-              value={formData.emailOrPhone}
-              onChange={handleChange}
-              placeholder="Enter email or phone"
-              icon={Mail}
-              required
-            />
-
-            {/* Password Input */}
-            <div className="relative">
-              <Input
-                label="Password"
-                type={showPassword ? 'text' : 'password'}
-                name="password"
-                value={formData.password}
-                onChange={handleChange}
-                placeholder="Enter your password"
-                icon={Lock}
-                required
-              />
-              <button
-                type="button"
-                onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3 top-9 text-gray-400 hover:text-gray-600"
+    <div className="min-h-screen bg-gradient-to-br from-[#e8f0ff] via-white to-[#f5f8ff] flex items-center justify-center py-16 px-4 sm:px-6 lg:px-8">
+      <div className="w-full max-w-md">
+        <div className="bg-white shadow-2xl border border-gray-200 rounded-2xl overflow-hidden">
+          {/* Header Section */}
+          <div className="text-center pt-10 pb-6 px-8">
+            <div className="mx-auto h-20 w-20 bg-[#2563eb] rounded-2xl flex items-center justify-center shadow-lg mb-5">
+              <svg
+                className="h-11 w-11 text-white"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                strokeWidth={2.5}
+                aria-hidden="true"
               >
-                {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
-              </button>
-            </div>
-
-            {/* Forgot Password Link */}
-            <div className="flex items-center justify-between">
-              <div className="flex items-center">
-                <input
-                  id="remember"
-                  type="checkbox"
-                  className="h-4 w-4 text-primary focus:ring-primary border-gray-300 rounded"
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
                 />
-                <label htmlFor="remember" className="ml-2 block text-sm text-gray-700">
-                  Remember me
-                </label>
-              </div>
-              <Link
-                to="/forgot-password"
-                className="text-sm text-primary hover:text-primary-dark font-medium"
-              >
-                Forgot password?
-              </Link>
+              </svg>
             </div>
+            <h1 className="text-3xl font-bold text-gray-900 mb-2">
+              {t("login.title")}
+            </h1>
+            <p className="text-sm text-gray-600">{t("login.subtitle")}</p>
+          </div>
 
-            {/* Submit Button */}
-            <Button
-              type="submit"
-              fullWidth
-              loading={loading}
-              disabled={loading}
-            >
-              Sign In
-            </Button>
-          </form>
+          {/* Login Form */}
+          <div className="px-8 pb-8">
+            <form onSubmit={handleSubmit} className="space-y-5">
+              {/* Email/Phone Input */}
+              <div>
+                <label htmlFor="emailOrPhone" className="block text-sm font-medium text-gray-700 mb-2">
+                  {t("login.email")} <span className="text-red-500">*</span>
+                </label>
+                <input
+                  type="text"
+                  id="emailOrPhone"
+                  name="emailOrPhone"
+                  value={formData.emailOrPhone}
+                  onChange={handleChange}
+                  placeholder={t("login.emailPlaceholder") || "Enter your email or phone number"}
+                  required
+                  className="w-full px-4 py-3 text-[15px] text-gray-800 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#2563eb] focus:border-[#2563eb] placeholder:text-gray-400 bg-white transition-all duration-200"
+                />
+              </div>
 
-          {/* Divider */}
-          <div className="mt-6">
-            <div className="relative">
+              {/* Password Input */}
+              <div>
+                <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-2">
+                  {t("login.password")} <span className="text-red-500">*</span>
+                </label>
+                <div className="relative">
+                  <input
+                    type={showPassword ? "text" : "password"}
+                    id="password"
+                    name="password"
+                    value={formData.password}
+                    onChange={handleChange}
+                    placeholder={t("login.passwordPlaceholder") || "Enter your password"}
+                    required
+                    className="w-full px-4 py-3 pr-12 text-[15px] text-gray-800 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#2563eb] focus:border-[#2563eb] placeholder:text-gray-400 bg-white transition-all duration-200"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-[#2563eb] transition-colors focus:outline-none p-1"
+                    aria-label={showPassword ? "Hide password" : "Show password"}
+                  >
+                    {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                  </button>
+                </div>
+              </div>
+
+              {/* Remember & Forgot */}
+              <div className="flex items-center justify-between text-sm pt-1">
+                <label className="flex items-center gap-2 text-gray-700 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    className="h-4 w-4 rounded border-gray-300 text-[#2563eb] focus:ring-[#2563eb] cursor-pointer"
+                  />
+                  <span>{t("login.rememberMe")}</span>
+                </label>
+                <Link
+                  to="/forgot-password"
+                  className="text-[#2563eb] hover:text-[#1e40af] font-medium hover:underline"
+                >
+                  {t("login.forgotPassword")}
+                </Link>
+              </div>
+
+              {/* Submit Button */}
+              <div className="pt-2">
+                <button
+                  type="submit"
+                  disabled={loading}
+                  className="w-full bg-[#2563eb] text-white py-3 rounded-lg font-semibold hover:bg-[#1e40af] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#2563eb] transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed shadow-md hover:shadow-lg"
+                >
+                  {loading ? (
+                    <svg
+                      className="animate-spin h-5 w-5 mx-auto text-white"
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                    >
+                      <circle
+                        className="opacity-25"
+                        cx="12"
+                        cy="12"
+                        r="10"
+                        stroke="currentColor"
+                        strokeWidth="4"
+                      ></circle>
+                      <path
+                        className="opacity-75"
+                        fill="currentColor"
+                        d="M4 12a8 8 0 018-8v8z"
+                      ></path>
+                    </svg>
+                  ) : (
+                    t("login.signIn")
+                  )}
+                </button>
+              </div>
+            </form>
+
+            {/* Divider */}
+            <div className="relative my-7">
               <div className="absolute inset-0 flex items-center">
-                <div className="w-full border-t border-gray-300" />
+                <div className="w-full border-t border-gray-300"></div>
               </div>
               <div className="relative flex justify-center text-sm">
-                <span className="px-2 bg-white text-gray-500">Or</span>
+                <span className="px-4 bg-white text-gray-500 font-medium">{t("login.or")}</span>
               </div>
             </div>
-          </div>
 
-          {/* Register Link */}
-          <div className="mt-6 text-center">
-            <p className="text-sm text-gray-600">
-              Don't have an account?{' '}
+            {/* Register Link */}
+            <div className="text-center text-sm text-gray-700 mb-5">
+              {t("login.noAccount")}{" "}
               <Link
                 to="/register"
-                className="font-medium text-primary hover:text-primary-dark"
+                className="text-[#2563eb] hover:text-[#1e40af] font-semibold hover:underline"
               >
-                Sign up now
+                {t("login.signUp")}
               </Link>
-            </p>
-          </div>
-        </div>
+            </div>
 
-        {/* Public Track Option */}
-        <div className="mt-6 text-center">
-          <Link
-            to="/track-complaint"
-            className="inline-flex items-center text-sm text-gray-600 hover:text-primary"
-          >
-            <AlertCircle size={16} className="mr-1" />
-            Track your complaint without login
-          </Link>
+            {/* Track Complaint */}
+            <div className="text-center">
+              <Link
+                to="/track-complaint"
+                className="inline-flex items-center gap-2 text-sm text-gray-600 hover:text-[#2563eb] transition-colors"
+              >
+                <AlertCircle size={16} />
+                <span>{t("login.trackComplaint") || "Track your complaint without login"}</span>
+              </Link>
+            </div>
+          </div>
         </div>
       </div>
     </div>
   );
-};
+}
 
 export default Login;

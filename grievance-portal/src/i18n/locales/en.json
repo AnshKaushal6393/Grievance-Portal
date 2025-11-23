@@ -1,0 +1,88 @@
+{
+  "nav": {
+    "home": "Home",
+    "about": "About",
+    "track": "Track Complaint",
+    "login": "Sign In",
+    "register": "Sign Up",
+    "dashboard": "Dashboard",
+    "myComplaints": "My Complaints",
+    "profile": "Profile",
+    "logout": "Logout"
+  },
+  "hero": {
+    "title": "Your Voice Matters",
+    "subtitle": "Report civic issues, track progress in real-time, and make your city better.",
+    "fileComplaint": "File a Complaint",
+    "trackComplaint": "Track Complaint",
+    "voiceComplaint": "Voice Complaint"
+  },
+  "login": {
+    "title": "Welcome Back",
+    "subtitle": "Access your Grievance Portal account",
+    "email": "Email or Phone Number",
+    "password": "Password",
+    "rememberMe": "Remember me",
+    "forgotPassword": "Forgot password?",
+    "signIn": "Sign In",
+    "noAccount": "Don't have an account?",
+    "signUp": "Sign up now",
+    "or": "OR",
+    "voiceLogin": "Login with Voice"
+  },
+   "register": {
+    "title": "Create Account",
+    "subtitle": "Join us to file and track complaints",
+    "name": "Full Name",
+    "email": "Email Address",
+    "phone": "Phone Number",
+    "password": "Password",
+    "confirmPassword": "Confirm Password",
+    "address": "Address",
+    "street": "Street Address",
+    "city": "City",
+    "state": "State",
+    "pincode": "Pincode",
+    "createAccount": "Create Account",
+    "haveAccount": "Already have an account?",
+    "step1": "Personal Info",
+    "step2": "Password",
+    "step3": "Address",
+    "next": "Next Step",
+    "back": "Back"
+  },
+   "complaint": {
+    "title": "Complaint Title",
+    "description": "Describe your problem",
+    "category": "Category",
+    "submit": "Submit Complaint"
+  },
+  "categories": {
+    "roads": "Roads & Transportation",
+    "water": "Water Supply",
+    "electricity": "Electricity",
+    "sanitation": "Sanitation",
+    "streetLight": "Street Lighting",
+    "publicSafety": "Public Safety",
+    "healthcare": "Healthcare",
+    "education": "Education",
+    "others": "Others"
+  },
+  "status": {
+    "pending": "Pending",
+    "assigned": "Assigned",
+    "inProgress": "In Progress",
+    "resolved": "Resolved",
+    "rejected": "Rejected"
+  },
+  "common": {
+    "loading": "Loading...",
+    "submit": "Submit",
+    "cancel": "Cancel",
+    "save": "Save",
+    "back": "Back",
+    "next": "Next",
+    "search": "Search",
+    "help": "Help"
+  }
+}

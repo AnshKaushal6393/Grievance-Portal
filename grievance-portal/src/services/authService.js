@@ -60,15 +60,6 @@ const authService = {
     return response.data;
   },
 
-  // Update password
-  updatePassword: async (passwords) => {
-    const response = await API.put('/auth/update-password', passwords);
-    if (response.data.token) {
-      localStorage.setItem('token', response.data.token);
-    }
-    return response.data;
-  },
-
   // Logout
   logout: () => {
     localStorage.removeItem('token');
