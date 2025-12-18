@@ -8,8 +8,8 @@ const notificationSchema = new mongoose.Schema({
   },
   type: {
     type: String,
-    enum: ["complaint_update", "assignment", "resolved", "comment", "system"],
-    required: true,
+    enum: ['info', 'success', 'warning', 'error', 'complaint_update'],
+    default: 'info'
   },
   title: {
     type: String,
@@ -19,23 +19,29 @@ const notificationSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  complaint: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Complaint",
-  },
   link: String,
-  isRead: {
+  relatedComplaint: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Complaint'
+  },
+  read: {
     type: Boolean,
-    default: false,
+    default: false
   },
-  createdAt: {
-    type: Date,
-    default: Date.now,
-    expires: 2592000,
-  },
+  readAt: {
+    type: Date
+  }
+}, {
+  timestamps: true
 });
 
-notificationSchema.index({ user: 1, isRead: 1, createdAt: -1 });
+notificationSchema.index({ user: 1, read: 1, createdAt: -1 });
+
+notificationSchema.methods.markAsRead = async function() {
+  this.read = true;
+  this.readAt = new Date();
+  await this.save();
+};
 
 const Notification = mongoose.model("Notification", notificationSchema);
 

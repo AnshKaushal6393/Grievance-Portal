@@ -3,15 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { useTranslation } from "react-i18next";
 import { register, clearError } from "../../redux/slices/authSlice";
-import {
-  User,
-  Mail,
-  Phone,
-  Lock,
-  MapPin,
-  Eye,
-  EyeOff,
-} from "lucide-react";
+import { User, Eye, EyeOff } from "lucide-react";
 import { toast } from "react-toastify";
 
 function Register() {
@@ -117,67 +109,73 @@ function Register() {
     dispatch(register(submitData));
   };
 
+  const stepLabels = [
+    t("register.step1") || "Personal Info",
+    t("register.step2") || "Password",
+    t("register.step3") || "Address"
+  ];
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#e8f0ff] via-white to-[#f5f8ff] flex items-center justify-center py-16 px-4 sm:px-6 lg:px-8">
       <div className="w-full max-w-2xl">
-        {/* Header */}
-        <div className="text-center mb-8">
-          <div className="mx-auto h-20 w-20 bg-[#2563eb] rounded-2xl flex items-center justify-center shadow-lg mb-5">
-            <User className="h-11 w-11 text-white" strokeWidth={2.5} />
-          </div>
-          <h2 className="text-3xl font-bold text-gray-900 mb-2">
-            {t("register.title")}
-          </h2>
-          <p className="text-sm text-gray-600">{t("register.subtitle")}</p>
-        </div>
-
-        {/* Progress Steps */}
-        <div className="mb-8">
-          <div className="flex items-center justify-between">
-            {[1, 2, 3].map((step) => (
-              <div key={step} className="flex items-center flex-1">
-                <div
-                  className={`w-12 h-12 rounded-full flex items-center justify-center font-bold text-lg transition-all duration-300 ${
-                    currentStep >= step
-                      ? "bg-[#2563eb] text-white shadow-lg"
-                      : "bg-gray-200 text-gray-500"
-                  }`}
-                >
-                  {step}
-                </div>
-                {step < 3 && (
-                  <div
-                    className={`flex-1 h-2 mx-3 rounded-full transition-all duration-300 ${
-                      currentStep > step ? "bg-[#2563eb]" : "bg-gray-200"
-                    }`}
-                  />
-                )}
-              </div>
-            ))}
-          </div>
-          <div className="flex justify-between mt-3 px-1">
-            <span className="text-xs font-medium text-gray-600">
-              {t("register.step1")}
-            </span>
-            <span className="text-xs font-medium text-gray-600">
-              {t("register.step2")}
-            </span>
-            <span className="text-xs font-medium text-gray-600">
-              {t("register.step3")}
-            </span>
-          </div>
-        </div>
-
-        {/* Registration Form */}
         <div className="bg-white shadow-2xl border border-gray-200 rounded-2xl overflow-hidden">
-          <div className="px-8 py-8">
+          {/* Header with Logo */}
+          <div className="text-center pt-10 pb-6 px-8">
+            <div className="mx-auto h-20 w-20 bg-[#2563eb] rounded-2xl flex items-center justify-center shadow-lg mb-5">
+              <User className="h-11 w-11 text-white" strokeWidth={2.5} />
+            </div>
+            <h2 className="text-3xl font-bold text-gray-900 mb-2">
+              {t("register.title") || "Create Account"}
+            </h2>
+            <p className="text-sm text-gray-600">
+              {t("register.subtitle") || "Join us to file and track complaints"}
+            </p>
+          </div>
+
+          {/* Progress Steps */}
+          <div className="px-8 pb-6">
+            <div className="flex items-center justify-between mb-3">
+              {[1, 2, 3].map((step) => (
+                <div key={step} className="flex items-center flex-1">
+                  <div
+                    className={`w-12 h-12 rounded-full flex items-center justify-center font-bold text-lg transition-all duration-300 ${
+                      currentStep >= step
+                        ? "bg-[#2563eb] text-white shadow-lg"
+                        : "bg-gray-200 text-gray-500"
+                    }`}
+                  >
+                    {step}
+                  </div>
+                  {step < 3 && (
+                    <div
+                      className={`flex-1 h-2 mx-3 rounded-full transition-all duration-300 ${
+                        currentStep > step ? "bg-[#2563eb]" : "bg-gray-200"
+                      }`}
+                    />
+                  )}
+                </div>
+              ))}
+            </div>
+            
+            {/* Step Labels Below Numbers */}
+            <div className="flex justify-between px-1">
+              {stepLabels.map((label, index) => (
+                <div key={index} className="text-xs font-medium text-gray-600 text-center" style={{width: '33.33%'}}>
+                  {label}
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Form Content */}
+          <div className="px-8 pb-8">
             <form onSubmit={handleSubmit}>
               {/* Step 1: Personal Info */}
               {currentStep === 1 && (
                 <div className="space-y-5">
                   <div>
                     <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
-                      {t("register.name")} <span className="text-red-500">*</span>
+                      {t("register.name") || "Full Name"} <span className="text-red-500">*</span>
                     </label>
                     <input
                       type="text"
@@ -193,7 +191,7 @@ function Register() {
 
                   <div>
                     <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
-                      {t("register.email")} <span className="text-red-500">*</span>
+                      {t("register.email") || "Email Address"} <span className="text-red-500">*</span>
                     </label>
                     <input
                       type="email"
@@ -209,7 +207,7 @@ function Register() {
 
                   <div>
                     <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-2">
-                      {t("register.phone")} <span className="text-red-500">*</span>
+                      {t("register.phone") || "Phone Number"} <span className="text-red-500">*</span>
                     </label>
                     <input
                       type="tel"
@@ -230,7 +228,7 @@ function Register() {
                       onClick={handleNext}
                       className="w-full bg-[#2563eb] text-white py-3 rounded-lg font-semibold hover:bg-[#1e40af] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#2563eb] transition-all duration-200 shadow-md hover:shadow-lg"
                     >
-                      {t("register.next")}
+                      {t("register.next") || "Next Step"}
                     </button>
                   </div>
                 </div>
@@ -241,7 +239,7 @@ function Register() {
                 <div className="space-y-5">
                   <div>
                     <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-2">
-                      {t("register.password")} <span className="text-red-500">*</span>
+                      {t("register.password") || "Password"} <span className="text-red-500">*</span>
                     </label>
                     <div className="relative">
                       <input
@@ -266,7 +264,7 @@ function Register() {
 
                   <div>
                     <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700 mb-2">
-                      {t("register.confirmPassword")} <span className="text-red-500">*</span>
+                      {t("register.confirmPassword") || "Confirm Password"} <span className="text-red-500">*</span>
                     </label>
                     <input
                       type={showPassword ? "text" : "password"}
@@ -286,14 +284,14 @@ function Register() {
                       onClick={() => setCurrentStep(1)}
                       className="w-full bg-gray-200 text-gray-800 py-3 rounded-lg font-semibold hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-400 transition-all duration-200"
                     >
-                      {t("register.back")}
+                      {t("register.back") || "Back"}
                     </button>
                     <button
                       type="button"
                       onClick={handleNext}
                       className="w-full bg-[#2563eb] text-white py-3 rounded-lg font-semibold hover:bg-[#1e40af] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#2563eb] transition-all duration-200 shadow-md hover:shadow-lg"
                     >
-                      {t("register.next")}
+                      {t("register.next") || "Next Step"}
                     </button>
                   </div>
                 </div>
@@ -304,7 +302,7 @@ function Register() {
                 <div className="space-y-5">
                   <div>
                     <label htmlFor="street" className="block text-sm font-medium text-gray-700 mb-2">
-                      {t("register.street")}
+                      {t("register.street") || "Street Address"}
                     </label>
                     <input
                       type="text"
@@ -320,7 +318,7 @@ function Register() {
                   <div className="grid grid-cols-2 gap-4">
                     <div>
                       <label htmlFor="city" className="block text-sm font-medium text-gray-700 mb-2">
-                        {t("register.city")}
+                        {t("register.city") || "City"}
                       </label>
                       <input
                         type="text"
@@ -334,7 +332,7 @@ function Register() {
                     </div>
                     <div>
                       <label htmlFor="state" className="block text-sm font-medium text-gray-700 mb-2">
-                        {t("register.state")}
+                        {t("register.state") || "State"}
                       </label>
                       <input
                         type="text"
@@ -350,7 +348,7 @@ function Register() {
 
                   <div>
                     <label htmlFor="pincode" className="block text-sm font-medium text-gray-700 mb-2">
-                      {t("register.pincode")}
+                      {t("register.pincode") || "Pincode"}
                     </label>
                     <input
                       type="text"
@@ -370,7 +368,7 @@ function Register() {
                       onClick={() => setCurrentStep(2)}
                       className="w-full bg-gray-200 text-gray-800 py-3 rounded-lg font-semibold hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-400 transition-all duration-200"
                     >
-                      {t("register.back")}
+                      {t("register.back") || "Back"}
                     </button>
                     <button
                       type="submit"
@@ -399,7 +397,7 @@ function Register() {
                           ></path>
                         </svg>
                       ) : (
-                        t("register.createAccount")
+                        t("register.createAccount") || "Create Account"
                       )}
                     </button>
                   </div>
@@ -410,12 +408,12 @@ function Register() {
             {/* Login Link */}
             <div className="mt-7 text-center">
               <p className="text-sm text-gray-600">
-                {t("register.haveAccount")}{" "}
+                {t("register.haveAccount") || "Already have an account?"}{" "}
                 <Link
                   to="/login"
                   className="text-[#2563eb] hover:text-[#1e40af] font-semibold hover:underline"
                 >
-                  {t("nav.login")}
+                  {t("nav.login") || "Sign In"}
                 </Link>
               </p>
             </div>

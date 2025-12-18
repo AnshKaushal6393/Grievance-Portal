@@ -1,7 +1,5 @@
 import mongoose from "mongoose";
 import bcrypt from "bcryptjs";
-import jwt from "jsonwebtoken";
-
 
 const userSchema = new mongoose.Schema({
   name: {
@@ -34,59 +32,65 @@ const userSchema = new mongoose.Schema({
   },
   role: {
     type: String,
-    enum: ["citizen", "department", "admin"],
+    enum: ["citizen", "department_head", "official", "admin"],
     default: "citizen",
   },
-  // aadharHash: {
-  //   type: String,
-  //   select: false,
-  // },
-  address: {
-    street: { type: String, trim: true },
-    city: { type: String, trim: true },
-    state: { type: String, trim: true },
-    pincode: { type: String, match: [/^\d{6}$/, "Invalid pincode"] },
-  },
-  location: {
-    type: {
-      type: String,
-      enum: ["Point"],
-      default: "Point",
-    },
-    coordinates: {
-      type: [Number],
-      default: [0, 0],
-    },
-  },
-  avatar: {
+  aadharNumber: {
     type: String,
-    default: "https://via.placeholder.com/150",
+    sparse: true,
+    unique: true,
+    match: [/^\d{12}$/, "Aadhaar must be 12 digits"],
   },
+  aadhaarVerified: {
+    type: Boolean,
+    default: false,
+  },
+  address: {
+    street: String,
+    city: String,
+    state: String,
+    pincode: String,
+    coordinates: {
+      type: { type: String, default: "Point" },
+      coordinates: [Number], // [longitude, latitude]
+    },
+  },
+  profileImage: String,
   department: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Department",
+    required: function () {
+      return ["official", "department_head"].includes(this.role);
+    },
   },
   isVerified: {
     type: Boolean,
     default: false,
   },
-  isActive: {
+  isApproved: {
     type: Boolean,
-    default: true,
+    default: function () {
+      return this.role === "citizen";
+    },
   },
-  complaintsField: {
-    type: Number,
-    default: 0,
+  language: {
+    type: String,
+    default: "en",
+    enum: ["en", "hi", "bn", "te", "mr", "ta", "gu", "kn", "ml", "pa"],
   },
+  notificationPreferences: {
+    email: { type: Boolean, default: true },
+    sms: { type: Boolean, default: true },
+    push: { type: Boolean, default: true },
+  },
+  lastLogin: Date,
   resetPasswordToken: String,
   resetPasswordExpire: Date,
-  createdAt: {
-    type: Date,
-    default: Date.now,
-  },
-});
+  otp: String,
+  otpExpire: Date,
+}, { timestamps: true });
 
-userSchema.index({ location: "2dsphere" });
+userSchema.index({ "address.coordinates": "2dsphere" });
 
 userSchema.pre("save", async function (next) {
   if (!this.isModified("password")) return next();
@@ -100,16 +104,6 @@ userSchema.methods.comparePassword = async function (enteredPassword) {
   return await bcrypt.compare(enteredPassword, this.password);
 };
 
-userSchema.methods.generateToken = function () {
-  return jwt.sign(
-    {
-      id: this._id,
-      role: this.role,
-    },
-    process.env.JWT_SECRET,
-    { expiresIn: process.env.JWT_EXPIRE }
-  );
-};
 
 const User = mongoose.model("User", userSchema);
 export default User;
